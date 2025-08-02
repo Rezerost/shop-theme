@@ -1,11 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
-    <title>{{ shop.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title | escape }}{% if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+    
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ 'favicon.ico' | asset_url }}">
+    
+    <!-- CSS -->
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    
+    <!-- Shopify required -->
     {{ content_for_header }}
+    
+    <!-- Custom CSS for VIBE SHOP design -->
+    <style>
+      :root {
+        --background: 220 27% 8%;
+        --foreground: 220 15% 95%;
+        --card: 220 25% 12%;
+        --card-foreground: 220 15% 95%;
+        --primary: 217 91% 60%;
+        --primary-foreground: 220 27% 8%;
+        --secondary: 220 20% 18%;
+        --secondary-foreground: 220 15% 95%;
+        --muted: 220 20% 15%;
+        --muted-foreground: 220 10% 65%;
+        --accent: 260 75% 65%;
+        --accent-foreground: 220 27% 8%;
+        --border: 220 20% 20%;
+        --radius: 0.75rem;
+        --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(260 75% 65%));
+        --gradient-card: linear-gradient(135deg, hsl(220 25% 12%), hsl(220 20% 18%));
+        --gradient-accent: linear-gradient(45deg, hsl(260 75% 65%), hsl(280 80% 70%));
+        --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.3);
+        --shadow-card: 0 10px 30px -10px hsl(220 27% 8% / 0.5);
+      }
+      
+      body {
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      
+      .gradient-card {
+        background: var(--gradient-card);
+        border: 1px solid hsl(var(--border));
+      }
+      
+      .gradient-primary {
+        background: var(--gradient-primary);
+      }
+      
+      .shadow-glow {
+        box-shadow: var(--shadow-glow);
+      }
+      
+      .shadow-card {
+        box-shadow: var(--shadow-card);
+      }
+      
+      .touch-target {
+        min-height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
   </head>
-  <body>
-    {{ content_for_layout }}
+  
+  <body class="min-h-screen bg-background">
+    {% section 'header' %}
+    
+    <main role="main" id="MainContent">
+      {{ content_for_layout }}
+    </main>
+    
+    {% section 'footer' %}
+    
+    <!-- JavaScript -->
+    {{ 'theme.js' | asset_url | script_tag }}
   </body>
 </html>
